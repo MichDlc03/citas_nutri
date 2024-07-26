@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inicio de Sesión</title>
+  <link rel="stylesheet" href="css/css/login.css">
+</head>
+<body>
+
+<div class="container">
+  <h2>Citas Nutri</h2>
+  <h4 >Iniciar Sesión</h4>
+  <form  method="post" class="form" action="http://localhost:3000/api/auth/login">
+    <input type="email" class="correo" name="correo" maxlength="75" placeholder="Correo" autocomplete="on" required>
+    <input type="password" name="password" maxlength="20" placeholder="Contraseña" required>
+    <button type="submit" class="btn-login" > Continuar</button>
+    <a href="home.html" class="btn btn-primary"></a>
+  </form>
+  <div class="link justify-content-center aling-content-center text-center ">
+    <a href="#" >Crear cuenta</a>
+  </div>
+</div>
+</body>
+<!-- <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelector("form").addEventListener("submit", async function(event) {
+                event.preventDefault();
+
+                const formData = new FormData(this);
+                const requestData = {};
+                for (var pair of formData.entries()) {
+                    requestData[pair[0]] = pair[1];
+                }
+
+                try {
+                    const response = await fetch(this.action, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(requestData)
+                    });
+
+                    if (response.ok) {
+                        const responseData = await response.json();
+
+                        // Guardar el token en las cookies
+                        document.cookie = `token=${responseData.token}`;
+
+                        // Redirigir a la página de inicio de sesión
+                        window.location.href = "/public/homee.html";
+                    } else {
+                        console.error('Error en el inicio de sesión:', response.statusText);
+                        alert("contraseña incorrecta")
+                    }
+                } catch (error) {
+                    console.error('Error en el inicio de sesión:', error);
+                }
+            });
+        });
+</script> -->
+</html>
