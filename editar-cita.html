@@ -4,34 +4,34 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
-    <title>Agendar cita</title>
+    <title>Citas</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link href="css/css/index.css" rel="stylesheet">
 </head>
 <body>
-    <header id="header" class="header fixed-top position-fixed  d-flex align-items-center">
+    <header id="header" class="header fixed-top position-fixed d-flex align-items-center">
         <nav class="header-nav ms-auto">
             <ul class="d-flex align-items-center">
-                <li class=" nav-item dropdown pe-3 d-flex">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                    <i class="fa-solid fa-user" style="color: black;"></i>               
-                    <div class="dropdown m-2 ">
-                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Mich Dlc
+                <li class="nav-item dropdown pe-3 d-flex">
+                    <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                        <i class="fa-solid fa-user" style="color: black;"></i>               
+                        <div class="dropdown m-2">
+                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span id="username"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Perfil</a></li>
+                                <li><a class="dropdown-item" href="#" id="logoutBtn">Salir</a></li>
+                            </ul>
+                        </div>              
                     </a>
-                    <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Perfil</a></li>
-                    <li><a class="dropdown-item" href="#">Salir</a></li>
-                    </ul>
-                    </div>              
-                </a>
                 </li>
             </ul>
         </nav>
@@ -40,107 +40,148 @@
         <ul class="sidebar-nav" id="sidebar-nav">
             <li class="nav-item mb-4 mt-2">
                 <a href="index.html" class="logo d-flex align-items-center">
-                    <p class="d-none d-lg-block title mt-3">Citas</p>
+                    <p class="d-none d-lg-block title mt-3">Nutri</p>
                 </a>
             </li>
             <li class="nav-item pb-2">
-                <a class="nav-link  collapsed" href="home.html">
-                <i class="bi bi-grid"></i>
-                <span>Home</span>
+                <a class="nav-link collapsed" href="#">
+                    <i class="bi bi-grid"></i>
+                    <span>Citas</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link  " href="agenda.html">
-                <i class="bi bi-person"></i>
-                <span>Agenda</span> 
+                <a class="nav-link" href="cons.html">
+                    <i class="bi bi-person"></i>
+                    <span>consultorios</span> 
                 </a>  
             </li>
-            <li class="nav-item">
-                <a class="nav-link  " href="gestion-citas.html">
-                <i class="bi bi-person"></i>
-                <span>Gestionar citas</span> 
-                </a>  
-            </li>
-           
-            <li class="nav-item px-0 align-middle float-end " style="margin-top: auto; align-self: flex-end;">
-                <a href="#" class="btn btn-icon btn-active-color-primary btn-icon-custom-color me-n4" data-bs-toggle="tooltip" title="Salir">
+            <li class="nav-item px-0 align-middle float-end" style="margin-top: auto; align-self: flex-end;">
+                <a href="#" class="btn btn-icon btn-active-color-primary btn-icon-custom-color me-n4" data-bs-toggle="tooltip" title="Salir" id="logoutBtn">
                     <i class="fa fa-solid fa-arrow-right-from-bracket" style="color: #ffffff;"></i>
                 </a>
             </li>
         </ul>
-        </aside>
+    </aside>
     <main id="main" class="main">
-        <section >
-            <div class="col-lg-12 d-flex flex-row-fluid flex-column flex-column-fluid ">
-                    <div class=" mx-3 mb-3">
-                        <div class=" card-title text-start ">
-                                Editar cita
+        <section class="mt-3">
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="mx-2 mb-2">
+                            <div class="card-title text-start">
+                                <div id="username1"></div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card-body ">
-                        <div class="col-md-12 col-sm-12 ">
+                        <div class="container">
                             <div class="row">
-                                <div class="col-md-12 col-sm-12 ">
+                                <div class="col-0">
                                     <div class="card h-100">
                                         <div class="card-title mx-4">Información del paciente</div>
                                         <div class="card-body">
-                                            <div >
-                                                <input class="form-control" form type="text" maxlength="50" name="nombre" placeholder="Nombre completo">
+                                            <div>
+                                                <input class="form-control" type="text" maxlength="50" name="nombre" placeholder="Nombre completo">
                                             </div>
                                             <div class="mt-4">
-                                                <span class="form-label"> Descripción </span>
+                                                <span class="form-label">Descripción</span>
                                                 <textarea name="descripcion" class="form-control mt-2"></textarea>
                                             </div>
                                             <div class="row mt-4">
-                                                <div class=" col-md-4">
-                                                    <label for="datetime" class="form-label mb-2" >Seleccione doctor para atender:</label>
-                                                    <select class="form-select  " aria-label="Default select example">
+                                                <div class="col-md-12">
+                                                    <label for="doctor" class="form-label mb-2">Seleccione doctor para atender:</label>
+                                                    <select class="form-select" name="doctor">
                                                         <option selected>Doctor</option>
-                                                        <option value="2">Dr. Juan Perez</option>
-                                                        <option value="2">Dra. Laura Saenz</option>
-                                                        <option value="3">Dra. Carmen Gallegos</option>
-                                                        <option value="4">Dr. Larusso Oss</option>
-                                                      
+                                                        <option value="1">Dr. Juan Perez</option>
+                                                        <option value="3">Dra. Laura Saenz</option>
+                                                        <option value="4">Dra. Carmen Gallegos</option>
+                                                        <option value="5">Dr. Larusso Oss</option>
                                                     </select>
                                                 </div>
-                                                <div class="col-md-4">
-                                                    <label for="datetime" class="form-label mb-2">Seleccione consultorio:</label>
-                                                    <select class="form-select " >
-                                                        <option selected>Consultario</option>
+                                                <div class="col-md-12">
+                                                    <label for="consultorio" class="form-label mb-2">Seleccione consultorio:</label>
+                                                    <select class="form-select" name="consultorio">
+                                                        <option selected>Consultorio</option>
                                                         <option value="1">Nutri, Merida, Yucatan</option>
                                                         <option value="2">Nutri by Larusso, Progreso, Yucatan</option>
                                                         <option value="3">Nutri, Valladolid, Yucatan</option>
                                                     </select>
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-12">
                                                     <label for="datetime" class="form-label mb-2">Seleccione fecha y hora:</label>
-                                                    <input type="datetime-local" id="datetime" name="datetime" class="form-control"> 
+                                                    <input type="datetime-local" id="datetime" name="datetime" class="form-control">
                                                 </div>
-                                                </div>
-                                                <div class="mt-4">
-                                                    <select class="form-select mt-2" aria-label="Estado">
-                                                        <option selected>Activo</option>
-                                                        <option value="1">Inactivo</option>
-                                                        <option value="2">Atendido</option>
-                                                        <option value="3">Cancelado</option>
-                                                      </select>
-                                                </div>
-                                                <div class="d-flex justify-content-end mt-5">
-                                                    <a href="home.html" class="btn btn-info m-2">Cancelar</a>
-                                                    <button class="btn btn-primary m-2">Actualizar cita</button>
-                        
-                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-end mt-5">
+                                                <a href="home.html" class="btn btn-info m-2">Limpiar</a>
+                                                <button class="btn btn-primary m-2">Guardar cita</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                <!-- tabla -->
+                               
                             </div>
                         </div>
                     </div>
+                </div>
             </div>
         </section>
     </main>
+
+    <!-- JS Scripts -->
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script>
+        
+        function deleteAllCookies() {
+                const cookies = document.cookie.split(';');
+                for (let cookie of cookies) {
+                    const equalsPosition = cookie.indexOf('=');
+                    const name = equalsPosition > -1 ? cookie.substr(0, equalsPosition) : cookie;
+                    document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+                }
+            }
+    
+            document.querySelectorAll('#logoutBtn').forEach(btn => {
+                btn.addEventListener('click', deleteAllCookies);
+            });
+        
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            window.location.href = 'login.html';
+        });
+
+        const initialize = async () => {
+            const token = document.cookie.split(';').find(cookie => cookie.trim().startsWith('token'));
+            const tokenValue = token ? token.split('=')[1] : null;
+
+            if (!tokenValue) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:3000/api/auth/validateToken', {
+                    headers: {
+                        'Authorization': `${tokenValue}`
+                    }
+                });
+
+                if (response.ok) {
+                    const userData = await response.json();
+                    document.getElementById('username').textContent = userData.nombre;
+                    document.getElementById('username1').textContent = "Bienvenido  " + userData.nombre;
+                    localStorage.setItem('usuarioId', userData.id);
+                    fetchCitas(currentPage, userData.id);
+                } else {
+                    window.location.href = 'login.html';
+                }
+            } catch (error) {
+                console.error('Error al validar token:', error);
+                // window.location.href = 'login.html';
+            }
+        };
+
+        initialize();
+    </script>
 </body>
-<script src="js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-<script src="https://kit.fontawesome.com/51b8ddcd56.js" crossorigin="anonymous"></script>
 </html>

@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
     <title>Citas</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
@@ -53,15 +51,10 @@
             <li class="nav-item">
                 <a class="nav-link" href="cons.html">
                     <i class="bi bi-person"></i>
-                    <span>consultorios</span> 
+                    <span>Consultorios</span> 
                 </a>  
             </li>
- 
-            <li class="nav-item px-0 align-middle float-end" style="margin-top: auto; align-self: flex-end;">
-                <a href="#" class="btn btn-icon btn-active-color-primary btn-icon-custom-color me-n4" data-bs-toggle="tooltip" title="Salir" id="logoutBtn">
-                    <i class="fa fa-solid fa-arrow-right-from-bracket" style="color: #ffffff;"></i>
-                </a>
-            </li>
+            <li class="nav-item px-0 align-middle float-end" style="margin-top: auto; align-self: flex-end;"></li>
         </ul>
     </aside>
     <main id="main" class="main">
@@ -72,7 +65,6 @@
                         <div class="mx-2 mb-2">
                             <div class="card-title text-start">
                                 <div id="username1"></div>
-                               
                             </div>
                         </div>
                         <div class="container">
@@ -91,35 +83,33 @@
                                             <div class="row mt-4">
                                                 <div class="col-md-12">
                                                     <label for="doctor" class="form-label mb-2">Seleccione doctor para atender:</label>
-                                                    <select class="form-select" name="doctor">
-                                                        <option selected>Doctor</option>
-                                                        <option value="1">Dr. Juan Perez</option>
-                                                        <option value="3">Dra. Laura Saenz</option>
-                                                        <option value="4">Dra. Carmen Gallegos</option>
-                                                        <option value="5">Dr. Larusso Oss</option>
+                                                    <select class="form-select" name="doctor" id="doctorSelect">
+                                                        <!-- Opciones llenadas dinámicamente -->
                                                     </select>
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label for="consultorio" class="form-label mb-2">Seleccione consultorio:</label>
-                                                    <select class="form-select" name="consultorio">
-                                                        <option selected>Consultorio</option>
-                                                        <option value="1">Nutri, Merida, Yucatan</option>
-                                                        <option value="2">Nutri by Larusso, Progreso, Yucatan</option>
-                                                        <option value="3">Nutri, Valladolid, Yucatan</option>
+                                                    <select class="form-select" name="consultorio" id="consultorioSelect">
+                                                        <!-- Opciones llenadas dinámicamente -->
                                                     </select>
                                                 </div>
                                                 <div class="col-md-12">
-                                                    <label for="datetime" class="form-label mb-2">Seleccione fecha y hora:</label>
-                                                    <input type="datetime-local" id="datetime" name="datetime" class="form-control">
+                                                    <label for="fecha" class="form-label mb-2">Seleccione fecha:</label>
+                                                    <input type="date" id="fecha" name="fecha" class="form-control">
+                                                </div>
+                                                <div class="col-md-12 mt-3">
+                                                    <label for="hora" class="form-label mb-2">Seleccione hora:</label>
+                                                    <input type="time" id="hora" name="hora" class="form-control">
                                                 </div>
                                             </div>
                                             <div class="d-flex justify-content-end mt-5">
                                                 <a href="home.html" class="btn btn-info m-2">Limpiar</a>
-                                                <button class="btn btn-primary m-2">Guardar cita</button>
+                                                <button class="btn btn-primary m-2" id="guardarCitaBtn">Guardar cita</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                
                                 <!-- tabla -->
                                 <div class="col-7">
                                     <div class="card">
@@ -135,8 +125,8 @@
                                                         <th scope="col">ID Cita</th>
                                                         <th scope="col">Paciente</th>
                                                         <th scope="col">Descripción</th>
-                                                        <th scope="col"></th>
-                                                        <th scope="col"> hora</th>
+                                                        <th scope="col">Fecha</th>
+                                                        <th scope="col">Hora</th>
                                                         <th scope="col">Estado</th>
                                                         <th scope="col">Editar</th>
                                                     </tr>
@@ -153,7 +143,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                
                             </div>
                         </div>
                     </div>
@@ -165,182 +154,166 @@
     <!-- JS Scripts -->
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/jquery.min.js"></script>
-<script>document.addEventListener('DOMContentLoaded', () => {
-    let currentPage = 1;
-    const pageSize = 10;
-
-    const fetchCitas = async (page) => {
-        try {
-            const response = await fetch(`http://localhost:3000/api/get/getAllCitas?page=${page}&pageSize=${pageSize}`);
-            const data = await response.json();
-            if (response.ok) {
-                renderTable(data.data);
-                renderPagination(data.currentPage, data.totalPages);
-            } else {
-                console.error('Error al obtener citas:', data.message);
-            }
-        } catch (error) {
-            console.error('Error en la solicitud:', error);
-        }
-    };
-
-    const renderTable = (citas) => {
-        const tableBody = document.getElementById('citasTableBody');
-        tableBody.innerHTML = citas.map(cita => `
-            <tr>
-                <td>${cita.id}</td>
-                <td>${cita.nombre_paciente}</td>
-                <td>${cita.motivo}</td>
-                <td>${cita.fecha}</td>
-                <td>${cita.hora}</td>
-                <td>
-                   ${cita.estado}
-                </td>
-                <td>
-                    <div class="d-flex mt-2">
-                        <a href="editar-cita.html?id=${cita.id}" class="btn btn-icon btn-secondary">
-                            <i class="fa fa-edit"></i>
-                        </a>
-                    </div>
-                </td>
-            </tr>
-        `).join('');
-    };
-
-    const renderPagination = (currentPage, totalPages) => {
-        const pagination = document.getElementById('pagination');
-        pagination.innerHTML = `
-            <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
-                <a class="page-link" href="#" aria-label="Previous" data-page="${currentPage - 1}">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            ${Array.from({ length: totalPages }, (_, i) => `
-                <li class="page-item ${currentPage === i + 1 ? 'active' : ''}">
-                    <a class="page-link" href="#" data-page="${i + 1}">${i + 1}</a>
-                </li>
-            `).join('')}
-            <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
-                <a class="page-link" href="#" aria-label="Next" data-page="${currentPage + 1}">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        `;
-    };
-
-    document.getElementById('pagination').addEventListener('click', (event) => {
-        const page = event.target.getAttribute('data-page');
-        if (page) {
-            currentPage = parseInt(page, 10);
-            fetchCitas(currentPage);
-        }
-    });
-
-    fetchCitas(currentPage);
-});
-</script>
     <script>
-
-document.addEventListener('DOMContentLoaded', async () => {
-            const usernameElement = document.getElementById('username');
-            const username1Element = document.getElementById('username1');
-            const token = document.cookie.split(';').find(cookie => cookie.trim().startsWith('token='));
-            const tokenValue = token ? token.split('=')[1] : null;
-
-            if (!tokenValue) {
-                window.location.href = 'login.html';
-                return;
-            }
-
-            try {
-                const response = await fetch('http://localhost:3000/api/auth/validateToken', {
-                    headers: {
-                        'Authorization': `${tokenValue}`
-                    }
-                });
-
-                if (response.ok) {
-                    const userData = await response.json();
-                    usernameElement.textContent = userData.nombre;
-                    username1Element.textContent = "Bienvenido " + userData.nombre;
-                } else {
-                    window.location.href = 'login.html';
-                }
-            } catch (error) {
-                console.error('Error al validar token:', error);
-                window.location.href = 'login.html';
-            }
-        });
-
-
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const guardarCitaBtn = document.querySelector('button.btn-primary');
-            guardarCitaBtn.addEventListener('click', async () => {
-                const nombre_paciente = document.querySelector('input[name="nombre"]').value;
-                const motivo = document.querySelector('textarea[name="descripcion"]').value;
-                const doctorSelect = document.querySelector('select[name="doctor"]');
-                const consultorioSelect = document.querySelector('select[name="consultorio"]');
-                const datetime = document.querySelector('input[name="datetime"]').value;
-
-                const nutri_id = doctorSelect.options[doctorSelect.selectedIndex].value;
-                const consultorio_id = consultorioSelect.options[consultorioSelect.selectedIndex].value;
-                const [fecha, hora] = datetime.split('T');
-
-                if (!nombre_paciente || !nutri_id || !consultorio_id || !fecha || !hora) {
-                    alert('Por favor, complete todos los campos.');
-                    return;
-                }
-
-                try {
-                    const response = await fetch('http://localhost:3000/api/create/createCita', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            nombre_paciente,
-                            nutri_id,
-                            consultorio_id,
-                            fecha,
-                            hora,
-                            motivo,
-                            estado: 'activa'
-                        })
-                    });
-
-                    const data = await response.json();
-
-                    if (response.ok) {
-                        alert('Cita creada exitosamente');
-                        // Opcional: Puedes redirigir o limpiar el formulario aquí
-                        window.location.reload();
-
-                    } else {
-                        alert(`Error: ${data.message}`);
-                    }
-                } catch (error) {
-                    console.error('Error al crear cita:', error);
-                    alert('Error al crear cita.');
+    document.addEventListener('DOMContentLoaded', async () => {
+        let currentPage = 1;
+        const pageSize = 10;
+        const usernameElement = document.getElementById('username');
+        const username1Element = document.getElementById('username1');
+        const doctorSelect = document.getElementById('doctorSelect');
+        const consultorioSelect = document.getElementById('consultorioSelect');
+        const guardarCitaBtn = document.getElementById('guardarCitaBtn');
+        const citasTableBody = document.getElementById('citasTableBody');
+        const pagination = document.getElementById('pagination');
+    
+        // Obtener datos del usuario
+        const token = document.cookie.split(';').find(cookie => cookie.trim().startsWith('token'));
+        const tokenValue = token ? token.split('=')[1] : null;
+    
+        if (!tokenValue) {
+            window.location.href = 'login.html';
+            return;
+        }
+    
+        try {
+            const response = await fetch('http://localhost:3000/api/auth/validateToken', {
+                headers: {
+                    'Authorization': `${tokenValue}`
                 }
             });
-        });
-
-        // Función para eliminar cookies
-        function deleteAllCookies() {
-            const cookies = document.cookie.split(';');
-            for (let cookie of cookies) {
-                const equalsPosition = cookie.indexOf('=');
-                const name = equalsPosition > -1 ? cookie.substr(0, equalsPosition) : cookie;
-                document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
-                window.location.reload();
-
+    
+            if (response.ok) {
+                const userData = await response.json();
+                usernameElement.textContent = userData.nombre;
+                username1Element.textContent = "Bienvenido " + userData.nombre;
+    
+                // Llenar el select de consultorios
+                const consultorioOption = document.createElement('option');
+                consultorioOption.value = userData.consultorioId;
+                consultorioOption.textContent = userData.nombre_consultorio;
+                consultorioSelect.appendChild(consultorioOption);
+                consultorioSelect.value = userData.consultorioId;
+    
+                // Llenar el select de doctores
+                const doctors = [{ id: userData.id, nombre: userData.nombre }];
+                doctors.forEach(doctor => {
+                    const option = document.createElement('option');
+                    option.value = doctor.id;
+                    option.textContent = doctor.nombre;
+                    doctorSelect.appendChild(option);
+                });
+    
+                // Obtener citas del usuario
+                const citasResponse = await fetch(`http://localhost:3000/api/get/getAllCitas1?usuarioId=${userData.id}&page=${currentPage}&size=${pageSize}`);
+                const citasData = await citasResponse.json();
+    
+                // Llenar la tabla de citas
+                citasTableBody.innerHTML = '';
+                citasData.data.forEach(cita => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${cita.id}</td>
+                        <td>${cita.nombre_paciente}</td>
+                        <td>${cita.motivo}</td>
+                        <td>${cita.fecha}</td>
+                        <td>${cita.hora}</td>
+                        <td>${cita.estado}</td>
+                        <td><a href="edit.html?id=${cita.id}" class="btn btn-warning">Editar</a></td>
+                    `;
+                    citasTableBody.appendChild(row);
+                });
+    
+                // Actualizar paginación
+                pagination.innerHTML = '';
+                for (let i = 1; i <= citasData.totalPages; i++) {
+                    const pageItem = document.createElement('li');
+                    pageItem.className = 'page-item';
+                    if (i === currentPage) pageItem.classList.add('active');
+                    pageItem.innerHTML = `<a class="page-link" href="#" data-page="${i}">${i}</a>`;
+                    pagination.appendChild(pageItem);
+                }
+    
+                // Manejador de eventos para el botón Guardar cita
+                guardarCitaBtn.addEventListener('click', async () => {
+                    const pacienteNombre = document.querySelector('input[name="nombre"]').value;
+                    const descripcion = document.querySelector('textarea[name="descripcion"]').value;
+                    const doctorId = doctorSelect.value;
+                    const consultorioId = consultorioSelect.value;
+                    const fecha = document.getElementById('fecha').value; // Campo separado para la fecha
+                    const hora = document.getElementById('hora').value; // Campo separado para la hora
+    
+                    try {
+                        const createCitaResponse = await fetch('http://localhost:3000/api/create/createCita', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                nombre_paciente: pacienteNombre,
+                                descripcion: descripcion,
+                                nutri_id: userData.id,
+                                consultorio_id: consultorioId,
+                                fecha: fecha,
+                                hora: hora
+                            })
+                        });
+    
+                        if (createCitaResponse.ok) {
+                            alert('Cita creada exitosamente');
+                            location.reload(); // Recargar para mostrar la nueva cita
+                        } else {
+                            alert('Error al crear cita');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                });
+    
+                // Manejador de eventos para el botón Salir
+                document.getElementById('logoutBtn').addEventListener('click', () => {
+                    document.cookie = 'token=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+                    window.location.href = 'login.html';
+                });
+    
+                // Manejar paginación
+                pagination.addEventListener('click', async (event) => {
+                    if (event.target.tagName === 'A') {
+                        event.preventDefault();
+                        currentPage = parseInt(event.target.getAttribute('data-page'));
+    
+                        const citasResponse = await fetch(`http://localhost:3000/api/get/getAllCitas1?usuarioId=${userData.id}&page=${currentPage}&size=${pageSize}`);
+                        const citasData = await citasResponse.json();
+    
+                        citasTableBody.innerHTML = '';
+                        citasData.data.forEach(cita => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${cita.id}</td>
+                                <td>${cita.nombre_paciente}</td>
+                                <td>${cita.descripcion}</td>
+                                <td>${cita.fecha}</td>
+                                <td>${cita.hora}</td>
+                                <td>${cita.estado}</td>
+                                <td><a href="edit.html?id=${cita.id}" class="btn btn-warning">Editar</a></td>
+                            `;
+                            citasTableBody.appendChild(row);
+                        });
+    
+                        // Actualizar paginación
+                        const pageItems = pagination.querySelectorAll('.page-item');
+                        pageItems.forEach(item => item.classList.remove('active'));
+                        const currentPageItem = pagination.querySelector(`.page-item[data-page="${currentPage}"]`);
+                        if (currentPageItem) currentPageItem.classList.add('active');
+                    }
+                });
+            } else {
+                window.location.href = 'login.html';
             }
+        } catch (error) {
+            console.error('Error:', error);
         }
-
-        document.querySelectorAll('#logoutBtn').forEach(btn => {
-            btn.addEventListener('click', deleteAllCookies);
-        });
+    });
     </script>
+    
 </body>
 </html>

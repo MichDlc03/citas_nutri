@@ -29,7 +29,7 @@
                         <i class="fa-solid fa-user" style="color: black;"></i>
                         <div class="dropdown m-2">
                             <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Mich Dlc
+                                <div id="username"></div>
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="#">Perfil</a></li>
@@ -50,13 +50,13 @@
                 </a>
             </li>
             <li class="nav-item pb-2">
-                <a class="nav-link collapsed" href="home.html">
+                <a class="nav-link " href="home.html">
                     <i class="bi bi-grid"></i>
                     <span>Citas</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="cons.html">
+                <a class="nav-link collapsed" href="cons.html">
                     <i class="bi bi-person"></i>
                     <span>Consultorios</span>
                 </a>
@@ -302,6 +302,42 @@
                 btn.addEventListener('click', deleteAllCookies);
             });
         });
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            window.location.href = 'login.html';
+        });
+
+        const initialize = async () => {
+            const token = document.cookie.split(';').find(cookie => cookie.trim().startsWith('token'));
+            const tokenValue = token ? token.split('=')[1] : null;
+
+            if (!tokenValue) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:3000/api/auth/validateToken', {
+                    headers: {
+                        'Authorization': `${tokenValue}`
+                    }
+                });
+
+                if (response.ok) {
+                    const userData = await response.json();
+                    document.getElementById('username').textContent = userData.nombre;
+                    localStorage.setItem('usuarioId', userData.id);
+                    fetchCitas(currentPage, userData.id);
+                } else {
+                    window.location.href = 'login.html';
+                }
+            } catch (error) {
+                console.error('Error al validar token:', error);
+                // window.location.href = 'login.html';
+            }
+        };
+
+        initialize();
     </script>
     
 </body>
