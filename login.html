@@ -9,67 +9,69 @@
 </head>
 
 <body>
-	<section class="login">
-		<div class="login_box">
-			<div class="left">
-				<div class="contact">
-					<form action="">
-						<h3>Iniciar Sesión</h3>
-						<input type="email" placeholder="Correo Electronico">
-						<input type="password" placeholder="Contraseña">
-                        <a id="linkRegister" href="registro.html">
-                            <p>¿Aún no tienes cuenta? Registrate</p>
-                        </a>
-						<button class="submit">Iniciar Sesión</button>
-					</form>
-				</div>
-			</div>
-			<div class="right">
-				<div class="right-text">
-					<h2>Citas Nutri</h2>
-					<h5>El mejor lugar para administrar tus citas</h5>
-				</div>
-				<div class="right-inductor"><img src="" alt=""></div>
-			</div>
-		</div>
-	</section>
+  <section class="login">
+    <div class="login_box">
+      <div class="left">
+        <div class="contact">
+          <form id="loginForm" action="http://localhost:3000/api/auth/login" method="post">
+            <h3>Iniciar Sesión</h3>
+            <input type="email" name="correo" placeholder="Correo Electrónico" required>
+            <input type="password" name="contrasena" placeholder="Contraseña" required>
+            <a id="linkRegister" href="registro.html">
+              <p>¿Aún no tienes cuenta? Regístrate</p>
+            </a>
+            <button type="submit" class="submit">Iniciar Sesión</button>
+          </form>
+        </div>
+      </div>
+      <div class="right">
+        <div class="right-text">
+          <h2>Citas Nutri</h2>
+          <h5>El mejor lugar para administrar tus citas</h5>
+        </div>
+        <div class="right-inductor"><img src="" alt=""></div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      document.querySelector("#loginForm").addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(this);
+        const requestData = {};
+        for (var pair of formData.entries()) {
+          requestData[pair[0]] = pair[1];
+        }
+
+        try {
+          const response = await fetch(this.action, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+          });
+
+          if (response.ok) {
+            const responseData = await response.json();
+
+            // Guardar el token en las cookies
+            document.cookie = `token=${responseData.token}; path=/`;
+
+            // Redirigir a la página principal
+            window.location.href = "/home.html";
+          } else {
+            console.error('Error en el inicio de sesión:', response.statusText);
+            alert("Usuario no encontrado o credenciales inválidas");
+          }
+        } catch (error) {
+          console.error('Error en el inicio de sesión:', error);
+          alert("Error en el inicio de sesión. Por favor, intente nuevamente.");
+        }
+      });
+    });
+  </script>
 </body>
-<!-- <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            document.querySelector("form").addEventListener("submit", async function(event) {
-                event.preventDefault();
-
-                const formData = new FormData(this);
-                const requestData = {};
-                for (var pair of formData.entries()) {
-                    requestData[pair[0]] = pair[1];
-                }
-
-                try {
-                    const response = await fetch(this.action, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(requestData)
-                    });
-
-                    if (response.ok) {
-                        const responseData = await response.json();
-
-                        // Guardar el token en las cookies
-                        document.cookie = `token=${responseData.token}`;
-
-                        // Redirigir a la página de inicio de sesión
-                        window.location.href = "/public/homee.html";
-                    } else {
-                        console.error('Error en el inicio de sesión:', response.statusText);
-                        alert("contraseña incorrecta")
-                    }
-                } catch (error) {
-                    console.error('Error en el inicio de sesión:', error);
-                }
-            });
-        });
-</script> -->
 </html>

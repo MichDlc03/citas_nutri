@@ -62,6 +62,18 @@ img{
     font-weight: 600;
     font-size: 14px;
 }
+.left select {
+  border: none;
+  width: 80%;
+  margin: 15px 0px;
+  border-bottom: 1px solid #4f30677d;
+  padding: 7px 9px;
+  width: 100%;
+  overflow: hidden;
+  background: transparent;
+  font-weight: 600;
+  font-size: 14px;
+}
 .left{
 	background: linear-gradient(-45deg, #dcd7e0, #fff);
 }

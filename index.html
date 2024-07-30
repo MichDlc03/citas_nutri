@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar Cita</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Agendar Cita</h2>
+        <form id="citaForm">
+            <div class="form-group">
+                <label for="nombrePaciente">Nombre del Paciente</label>
+                <input type="text" class="form-control" id="nombrePaciente" placeholder="Ingrese el nombre del paciente" required>
+            </div>
+            <div class="form-group">
+                <label for="fechaCita">Fecha de la Cita</label>
+                <input type="date" class="form-control" id="fechaCita" required>
+            </div>
+            <div class="form-group">
+                <label for="horaCita">Hora de la Cita</label>
+                <input type="time" class="form-control" id="horaCita" required>
+            </div>
+            <div class="form-group">
+                <label for="descripcion">Descripción o Motivo</label>
+                <textarea class="form-control" id="descripcion" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="medico">Médico</label>
+                <select class="form-control" id="medico" required>
+                    <option value="">Seleccione un médico</option>
+                    <!-- Opciones de médicos aquí -->
+                </select>
+            </div>
+            <div id="map"></div>
+            <button type="submit" class="btn btn-primary mt-3">Agendar Cita</button>
+        </form>
+    </div>
+
+    <!-- Scripts de Bootstrap y Leaflet -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+    <script>
+        let map;
+        let selectedConsultorioId = null;
+
+        // Inicializa el mapa
+        function initMap() {
+            map = L.map('map').setView([20.9700, -89.6200], 11); // Centro del mapa en una ubicación predeterminada
+
+            // Añade una capa de mapa
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+        }
+
+        // Función para obtener todos los consultorios y añadirlos al mapa
+        function loadConsultorios() {
+            fetch('http://localhost:3000/api/get/getAllConsultorios?page=1&pageSize=100')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.data && data.data.length > 0) {
+                        data.data.forEach(consultorio => {
+                            const coords = consultorio.coordenadas.split(',').map(Number);
+                            L.marker(coords).addTo(map)
+                                .bindPopup(consultorio.nombre)
+                                .on('click', () => {
+                                    selectedConsultorioId = consultorio.id;
+                                    loadDoctores(consultorio.id);
+                                });
+                        });
+                    }
+                })
+                .catch(error => console.error('Error al obtener consultorios:', error));
+        }
+
+        // Función para obtener todos los doctores y mostrarlos en el select
+        function loadDoctores(consultorioId) {
+            fetch('http://localhost:3000/api/get/getAllUsuarios?page=1&pageSize=100')
+                .then(response => response.json())
+                .then(data => {
+                    const medicoSelect = document.getElementById('medico');
+                    medicoSelect.innerHTML = '<option value="">Seleccione un médico</option>'; // Limpiar las opciones previas
+                    if (data.data && data.data.length > 0) {
+                        data.data.forEach(usuario => {
+                            if (usuario.consultorioId === consultorioId && usuario.tipo_usuario === 'nutriologo') { // Filtra por consultorio y tipo de usuario
+                                const option = document.createElement('option');
+                                option.value = usuario.id;
+                                option.textContent = usuario.nombre;
+                                medicoSelect.appendChild(option);
+                            }
+                        });
+                    }
+                })
+                .catch(error => console.error('Error al obtener doctores:', error));
+        }
+
+        // Función para agendar la cita
+        function agendarCita(data) {
+            fetch('http://localhost:3000/api/create/createCita', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Cita agendada exitosamente.');
+                console.log('Success:', data);
+                location.reload();
+                
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+
+        // Maneja el envío del formulario
+        document.getElementById('citaForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const nombrePaciente = document.getElementById('nombrePaciente').value;
+            const fechaCita = document.getElementById('fechaCita').value;
+            const horaCita = document.getElementById('horaCita').value;
+            const descripcion = document.getElementById('descripcion').value;
+            const medicoId = document.getElementById('medico').value;
+
+            if (!medicoId) {
+                alert('Por favor, seleccione un médico.');
+                return;
+            }
+
+            if (!selectedConsultorioId) {
+                alert('Por favor, seleccione un consultorio en el mapa.');
+                return;
+            }
+
+            const consulta = {
+                nombre_paciente: nombrePaciente,
+                nutri_id: medicoId,
+                consultorio_id: selectedConsultorioId,
+                fecha: fechaCita,
+                hora: horaCita,
+                motivo: descripcion,
+                estado: 'activa',
+            };
+
+            agendarCita(consulta);
+        });
+
+        // Inicializa el mapa y carga los consultorios cuando se carga la página
+        window.onload = function() {
+            initMap();
+            loadConsultorios();
+            
+        };
+    </script>
+</body>
+</html>

@@ -4,48 +4,87 @@
   <meta charset="UTF-8">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inicio de Sesión</title>
+  <title>Registro de Usuario</title>
   <link rel="stylesheet" href="css/css/login.css">
 </head>
 
 <body>
-	<section class="login">
-		<div class="login_box">
-			<div class="left">
-				<div class="contact">
-					<form action="">
-						<h3>Registrarse</h3>
-                        <input type="text" placeholder="Nombre Completo">
-						<input type="email" placeholder="Correo Electronico">
-						<input type="password" placeholder="Contraseña">
-                        <input type="password" placeholder="Confirmar Contraseña">
+    <section class="login">
+        <div class="login_box">
+            <div class="left">
+                <div class="contact">
+                    <form id="registerForm" action="http://localhost:3000/api/auth/register" method="POST">
+                        <h3>Registrarse</h3>
+                        <input type="text" name="nombre" placeholder="Nombre Completo" required>
+                        <input type="email" name="correo" placeholder="Correo Electrónico" required>
+                        <input type="password" name="contrasena" placeholder="Contraseña" required>
+                        <input type="password" name="confirmar_contrasena" placeholder="Confirmar Contraseña" required>
+                        
+                        <select name="consultorio" id="consultorio" required>
+                            <!-- Options will be populated here -->
+                        </select>
                         <a id="linkRegister" href="login.html">
                             <p>¿Ya tienes cuenta? Inicia Sesión</p>
                         </a>
-						<button class="submit">Crear Cuenta</button>
-					</form>
-				</div>
-			</div>
-			<div class="right">
-				<div class="right-text">
-					<h2>Citas Nutri</h2>
-					<h5>El mejor lugar para administrar tus citas</h5>
-				</div>
-				<div class="right-inductor"><img src="" alt=""></div>
-			</div>
-		</div>
-	</section>
-</body>
-<!-- <script>
+                        <button type="submit" class="submit">Crear Cuenta</button>
+                    </form>
+                </div>
+            </div>
+            <div class="right">
+                <div class="right-text">
+                    <h2>Citas Nutri</h2>
+                    <h5>El mejor lugar para administrar tus citas</h5>
+                </div>
+                <div class="right-inductor"><img src="" alt=""></div>
+            </div>
+        </div>
+    </section>
+
+    <script>
         document.addEventListener("DOMContentLoaded", function() {
-            document.querySelector("form").addEventListener("submit", async function(event) {
+            async function fetchConsultorios() {
+                try {
+                    const response = await fetch('http://localhost:3000/api/get/getAllConsultorios?page=1&pageSize=40');
+                    if (response.ok) {
+                        const data = await response.json();
+                        const consultorioSelect = document.querySelector('#consultorio');
+
+                        data.data.forEach(consultorio => {
+                            const option = document.createElement('option');
+                            option.value = consultorio.id; // Asegúrate de que `id` es el campo adecuado
+                            option.textContent = consultorio.nombre; // Asegúrate de que `nombre` es el campo adecuado
+                            consultorioSelect.appendChild(option);
+                        });
+                    } else {
+                        console.error('Error al obtener los consultorios:', response.statusText);
+                    }
+                } catch (error) {
+                    console.error('Error al obtener los consultorios:', error);
+                }
+            }
+
+            fetchConsultorios();
+
+            document.querySelector("#registerForm").addEventListener("submit", async function(event) {
                 event.preventDefault();
 
-                const formData = new FormData(this);
-                const requestData = {};
-                for (var pair of formData.entries()) {
-                    requestData[pair[0]] = pair[1];
+                const nombre = document.querySelector('input[name="nombre"]').value;
+                const correo = document.querySelector('input[name="correo"]').value;
+                const contrasena = document.querySelector('input[name="contrasena"]').value;
+                const confirmarContrasena = document.querySelector('input[name="confirmar_contrasena"]').value;
+                const consultorioId = document.querySelector('select[name="consultorio"]').value;
+
+                if (contrasena !== confirmarContrasena) {
+                    alert("Las contraseñas no coinciden.");
+                    return;
                 }
+
+                const requestData = {
+                    nombre,
+                    correo,
+                    contrasena,
+                    consultorioId
+                };
 
                 try {
                     const response = await fetch(this.action, {
@@ -58,20 +97,18 @@
 
                     if (response.ok) {
                         const responseData = await response.json();
-
-                        // Guardar el token en las cookies
-                        document.cookie = `token=${responseData.token}`;
-
-                        // Redirigir a la página de inicio de sesión
-                        window.location.href = "/public/homee.html";
+                        alert("Registro exitoso");
+                        window.location.href = "login.html";
                     } else {
-                        console.error('Error en el inicio de sesión:', response.statusText);
-                        alert("contraseña incorrecta")
+                        console.error('Error en el registro:', response.statusText);
+                        alert("Error en el registro. Por favor, intente nuevamente.");
                     }
                 } catch (error) {
-                    console.error('Error en el inicio de sesión:', error);
+                    console.error('Error en el registro:', error);
+                    alert("Error en el registro. Por favor, intente nuevamente.");
                 }
             });
         });
-</script> -->
+    </script>
+</body>
 </html>
