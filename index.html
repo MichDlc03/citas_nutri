@@ -11,37 +11,95 @@
             height: 400px;
             width: 100%;
         }
+            body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            background: url('img/consulta-nutricional-foto.jpg') no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
+        }
+        /* Estilo predeterminado para los inputs */
+  .form-control {
+    border-radius: 5px; 
+    transition: border-color 0.2s; 
+    background-color: #298ee696;
+  }
+  
+        /* Estilo cuando el input está enfocado */
+        .form-control:focus {
+            border-color:white; 
+            box-shadow: 0 0 0 0.2rem rgba(1, 184, 245, 0.314); 
+        }
+
+        .form-select {
+            border-radius: 5px; 
+            transition: border-color 0.2s; 
+            color:white;
+        }
+        
+        /* Estilo cuando el input está enfocado */
+        .form-select:focus {
+            border-color:var(--color-4); 
+            box-shadow: 0 0 0 0.2rem rgba(0, 191, 255, 0.314); 
+        }
+        .form-control::placeholder {
+            color: #1E2022; 
+        }
+        .select {
+            
+            border-radius: 0%;
+            border: none;
+            background: transparent;
+
+
+        }
+        .select:focus {
+            box-shadow: none; 
+        }
+        .texto-label
+        {
+            font-weight: 700;
+            color: black;
+        }
+
+
     </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h2>Agendar Cita</h2>
-        <form id="citaForm">
+    <div class="container  p-5 ">
+        <h2 class="mb-2 ">Agendar Cita</h2>
+        <form id="citaForm" class="card-body mt-4 p-5 shadow-lg rounded-2">
             <div class="form-group">
-                <label for="nombrePaciente">Nombre del Paciente</label>
-                <input type="text" class="form-control" id="nombrePaciente" placeholder="Ingrese el nombre del paciente" required>
+                <label for="nombrePaciente" class=" texto-label">Nombre del Paciente</label>
+                <input type="text" class="form-control " id="nombrePaciente" placeholder="Ingrese el nombre del paciente" required>
+            </div>
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label for="fechaCita" class="texto-label">Fecha de la Cita</label>
+                    <input type="date" class="form-control" id="fechaCita" required>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="horaCita" class="texto-label">Hora de la Cita</label>
+                    <input type="time" class="form-control" id="horaCita" required>
+                </div>
             </div>
             <div class="form-group">
-                <label for="fechaCita">Fecha de la Cita</label>
-                <input type="date" class="form-control" id="fechaCita" required>
-            </div>
-            <div class="form-group">
-                <label for="horaCita">Hora de la Cita</label>
-                <input type="time" class="form-control" id="horaCita" required>
-            </div>
-            <div class="form-group">
-                <label for="descripcion">Descripción o Motivo</label>
+                <label for="descripcion" class="texto-label">Descripción o Motivo</label>
                 <textarea class="form-control" id="descripcion" rows="3" required></textarea>
             </div>
             <div class="form-group">
-                <label for="medico">Médico</label>
+                <label for="medico" class="texto-label">Médico</label>
                 <select class="form-control" id="medico" required>
                     <option value="">Seleccione un médico</option>
                     <!-- Opciones de médicos aquí -->
                 </select>
             </div>
             <div id="map"></div>
-            <button type="submit" class="btn btn-primary mt-3">Agendar Cita</button>
+            <center>           
+                <button type="submit" class="btn btn-primary mt-3 w-100">Agendar Cita</button>
+            </center>
         </form>
     </div>
 
